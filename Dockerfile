@@ -70,7 +70,15 @@ RUN echo '#!/bin/bash\n\
     docker-entrypoint.sh php-fpm &\n\
     \n\
     # Wait a moment for WordPress initialization\n\
-    sleep 2\n\
+    sleep 5\n\
+    \n\
+    # Auto-update WordPress core if installed\n\
+    if wp core is-installed 2>/dev/null; then\n\
+    echo "WordPress is installed. Checking for updates..."\n\
+    wp core update || true\n\
+    wp core update-db || true\n\
+    echo "WordPress update check complete."\n\
+    fi\n\
     \n\
     # Start nginx in foreground\n\
     nginx -g "daemon off;"' > /start.sh && chmod +x /start.sh
