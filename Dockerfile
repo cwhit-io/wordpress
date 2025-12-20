@@ -20,6 +20,13 @@ RUN mkdir -p /root/.wp-cli && \
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY default.conf /etc/nginx/conf.d/default.conf
 
+# Copy WordPress Cloudflare configuration
+COPY wp-config-additions.php /usr/local/etc/php/wp-config-additions.php
+
+# Create FastCGI cache directory
+RUN mkdir -p /var/cache/nginx && \
+    chown -R www-data:www-data /var/cache/nginx
+
 # Set optimized PHP settings for WordPress
 RUN { \
     echo "memory_limit = 256M"; \
@@ -50,6 +57,9 @@ RUN { \
     echo "display_errors = Off"; \
     echo "log_errors = On"; \
     echo "error_log = /var/log/php_errors.log"; \
+    echo ""; \
+    echo "; Auto-prepend Cloudflare config"; \
+    echo "auto_prepend_file = /usr/local/etc/php/wp-config-additions.php"; \
     } > /usr/local/etc/php/conf.d/wordpress.ini
 
 # Create startup script that runs WordPress entrypoint first
