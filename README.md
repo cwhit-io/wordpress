@@ -4,19 +4,18 @@ A small Docker Compose setup for a self-hosted WordPress stack (MySQL, Redis, PH
 
 ## 🚀 Quick start
 
-1. Copy or generate a `.env` file:
+1. Create a `.env` file (required):
 
-   - Option 1: Generate a secure `.env` with random passwords:
-     ```bash
-     python scripts/generate_env.py
-     ```
-     To overwrite an existing `.env`, add `--force`.
+   ```bash
+   cp .env.example .env
+   # then edit .env to set the required values
+   ```
 
-   - Option 2: Copy the example and edit manually:
-     ```bash
-     cp .env.example .env
-     # then edit .env to set DB_PASSWORD and DB_ROOT_PASSWORD
-     ```
+   Required variables to set in `.env`:
+   - `HOST_PORT` — port to bind nginx (e.g. `80`)
+   - `DB_PASSWORD` — password for the WordPress database user
+
+   You can either set `DB_ROOT_PASSWORD` for a fixed MySQL root password, or set `MYSQL_RANDOM_ROOT_PASSWORD=yes` in your `.env` to have the MySQL image generate a random root password during initialization (the generated password will be printed to the database container's logs on first startup). If you use a random root password, capture it from the database container logs when the DB initializes (e.g., `docker-compose logs db --tail=200`).
 
 2. Start the stack:
 
@@ -24,35 +23,22 @@ A small Docker Compose setup for a self-hosted WordPress stack (MySQL, Redis, PH
    docker-compose up -d
    ```
 
-3. Visit http://localhost (or set `HOST_PORT` in `.env`).
+3. Visit http://localhost (or `http://localhost:${HOST_PORT}` if you changed the port).
 
 ## 🔒 Secrets & security
 
 - `.env` is ignored by Git (`.gitignore`) — **do not commit it**.
-- `scripts/generate_env.py` creates strong, URL-safe random secrets for:
-  - `DB_ROOT_PASSWORD` (MySQL root password)
-  - `DB_PASSWORD` (WordPress DB user password)
-
-You can control entropy with `--root-length` and `--db-length` (bytes of randomness).
+- Keep `DB_PASSWORD` and `DB_ROOT_PASSWORD` secret; store them securely in your environment or a secrets manager.
 
 ## 🧩 Project files
 
 - `docker-compose.yml` — service definitions (wordpress, db, redis, nginx)
-- `.env.example` — example environment variables
-- `scripts/generate_env.py` — generate `.env` with random secrets
-- `scripts/README.md` — usage notes for the generator
+- `.env.example` — example environment variables (edit before use)
+- `scripts/README.md` — notes about helpers in `scripts/`
 - `nginx.conf`, `custom-php.ini` — service configs
 
-## 🛠️ Tips
+## 🛠️ Helpful commands
 
-- Regenerate passwords (careful):
-  ```bash
-  python scripts/generate_env.py --force
-  ```
-  Regenerating will replace `DB_PASSWORD` and `DB_ROOT_PASSWORD`, which may require re-initializing or migrating your database.
-
-- On Windows, run the script with the Python available in your environment (`py -3` or `python`).
-
-## ❓ Need anything else?
-
-If you'd like I can add a PowerShell helper to generate `.env` on Windows, or add a `Makefile`/npm script for one-step setup. ✨
+- Start the stack: `docker-compose up -d`
+- View logs: `docker-compose logs -f`
+- Stop and remove: `docker-compose down`
