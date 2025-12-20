@@ -1,0 +1,9 @@
+.git
+.env
+.gitignore
+README.md
+*.md
+docker-compose.yml
+run-allinone.sh
+.dockerignore
+scripts/
