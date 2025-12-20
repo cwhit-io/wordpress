@@ -1,6 +1,6 @@
 services:
   wordpress:
-    build: .
+    image: cwhitio/wordpress:latest
     restart: unless-stopped
     environment:
       WORDPRESS_DB_HOST: db
@@ -18,8 +18,7 @@ services:
       redis:
         condition: service_healthy
     healthcheck:
-      test:
-        ["CMD-SHELL", "curl -f http://localhost/wp-admin/install.php || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://localhost/ || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 3
