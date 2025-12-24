@@ -21,7 +21,7 @@ Access WordPress at http://localhost:8080
 
 ## Container Build
 
-The container is automatically built and pushed to Docker Hub using GitHub Actions.
+The container is automatically built and pushed to GitHub Container Registry using GitHub Actions.
 
 ### Workflow Triggers
 
@@ -32,10 +32,7 @@ The build workflow runs on:
 
 ### Required Secrets
 
-To enable automatic builds and pushes to Docker Hub, configure these repository secrets:
-
-- `DOCKER_USERNAME`: Your Docker Hub username
-- `DOCKER_PASSWORD`: Your Docker Hub password or access token
+Authentication to GitHub Container Registry is handled automatically using the `GITHUB_TOKEN` provided by GitHub Actions. No additional secrets are required.
 
 ### Tagging Strategy
 
@@ -56,7 +53,7 @@ The container is built for:
 To build the container locally:
 
 ```bash
-docker build -t cwhitio/wordpress:local .
+docker build -t ghcr.io/cwhit-io/wordpress:local .
 ```
 
 To test the container:
