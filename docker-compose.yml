@@ -1,6 +1,6 @@
 services:
   wordpress:
-    image: cwhitio/wordpress:latest
+    image: ghcr.io/cwhit-io/wordpress:latest
     ports:
       - 8080:80
     environment:
@@ -32,3 +32,4 @@ services:
 volumes:
   wordpress_data:
   db_data:
+
